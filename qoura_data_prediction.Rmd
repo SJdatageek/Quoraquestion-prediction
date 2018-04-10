@@ -13,6 +13,8 @@ library(SnowballC)
 set.seed(111)
 
 train <- read.csv("F:/my docs/R/train.csv", header=FALSE)
+test <- read.csv("F:/my docs/R/test.csv", header=FALSE)
+
 View(train)
 x<-nrow(train)
 for(n in 2:x){
@@ -40,50 +42,10 @@ train$V4[[n]]<- t
 train$V5[[n]]<- t1
 }
 
-my_forestt<- randomForest(V6~V4+V5+bigW+bigW1,data=train,importance=TRUE,ntree=1000)
-my_predictionn<- predict(myforestt,train,type="class")
-
-
-```
-
-```{r qoura test data}
-test <- read.csv("F:/my docs/R/test.csv", header=FALSE)
-View(test)
-test$is_duplicate<- NA
-set.seed(111)
-
-x<-nrow(test)
-for(n in 2:x){
-t<- test$question1[[n]]
-t<- wordStem(t,language = "english")
-t1<- test$question2[[n]]
-t1<- wordStem(t1,language="english")
-t<-strsplit(t," ")
-t1<-strsplit(t1," ")
-v<- nchar(t,type="chars")
-v1<- nchar(t,type="chars")
-b<-length(v[[1]])
-c<-length(v1[[1]])
-test$bigW<- NA
-test$bigW1<- NA
-for(i in 1:b){
-if(v[[1]][i]>=4){
-  test$bigW<- v[[1]][i]}
-}
-for(i in 1:c){
-if(v1[[1]][i]>=4){
-  test$bigW1<- v1[[1]][i]}
-}
-test$question1[[n]]<- t
-test$question2[[n]]<- t1
-}
-
-my_forestt<- randomForest(is_duplicate~question1+question2+bigW+bigW1,data=test,importance=TRUE,ntree=1000)
+my_forestt<- randomForest(as.factor(V6)~V4+V5+bigW+bigW1,data=train,importance=TRUE,ntree=1000)
 my_predictionn<- predict(myforestt,test,type="class")
- 
+
 mysolution<- data.frame(test_id=test$test_id,probability=my_predictionn)
 write.csv(mysolution,file=mysolution.csv,row.names=TRUE)
 
-
 ```
-
