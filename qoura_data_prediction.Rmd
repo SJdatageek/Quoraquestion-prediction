@@ -17,6 +17,9 @@ test <- read.csv("F:/my docs/R/test.csv", header=FALSE)
 
 View(train)
 x<-nrow(train)
+train$bigW<- " "
+train$bigW1<- " "
+
 for(n in 2:x){
 t<- train$V4[[n]]
 t<- wordStem(t,language = "english")
@@ -28,15 +31,13 @@ v<- nchar(t,type="chars")
 v1<- nchar(t,type="chars")
 b<-length(v[[1]])
 c<-length(v1[[1]])
-train$bigW<- NA
-train$bigW1<- NA
 for(i in 1:b){
 if(v[[1]][i]>=4){
-  train$bigW<- v[[1]][i]}
+  train$bigW[[n]][i]<- v[[1]][i]}
 }
 for(i in 1:c){
 if(v1[[1]][i]>=4){
-  train$bigW1<- v1[[1]][i]}
+  train$bigW1[[n]][i]<- v1[[1]][i]}
 }
 train$V4[[n]]<- t
 train$V5[[n]]<- t1
